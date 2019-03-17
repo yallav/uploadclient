@@ -1,81 +1,101 @@
-<div class="userform">
-    <h2 class="control-label col-sm-12">Data Form</h2>
-      
-    <form class="form-horizontal" [formGroup]="userForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="headertext">Header Text</label>
-            <div class="col-sm-10">          
-                <input type="text" class="form-control" id="headertext" formControlName="headerText">
-            </div>
+<div style="height: auto">
+    <div class="userform">
+        <div class="formcontrol">
+            <h2 class="control-label col-sm-12 col-md-12">Data Form</h2>
+            <form class="form-horizontal" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label class="control-label col-sm-4" for="headertext">Header Text</label>
+                    <div class="col-sm-10">          
+                        <input type="text" class="form-control" id="headertext" formControlName="headerText">
+                    </div>
+                </div>
+        
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="message">Meaasge</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="5" id="message" formControlName="message"></textarea>
+                    </div>
+                </div>
+        
+                <div class="row" style="margin: 0px">
+                    <div class="col-sm-6 fontcls">
+                        <label class="control-label col-sm-8" for="fontname">Font Name</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="fontname" formControlName="fontname">
+                                <option value="Arial">Arial</option>
+                                <option value="Courier">Courier</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 fontcls">
+                        <label class="control-label col-sm-8" for="fonttype">Font Type</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="fonttype" formControlName="fonttype">
+                                <option value="0">FONT.PLAIN</option>
+                                <option value="1">FONT.BOLD</option>
+                                <option value="2">FONT.ITALIC</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row" style="padding: 0px; margin: 0px;">
+                    <div class="col-sm-6 col-md-6" style="padding: 0px;">
+                        <label class="control-label col-sm-12 col-md-12 textsizecls">Header Text Size</label>
+                        <div class="col-sm-12 col-md-12" style="padding-left: 0px;">
+                            <label class="radio-inline col-sm-2 col-md-2">
+                                <input type="radio" formControlName="hdrfontsize" value="30">30</label>
+                            <label class="radio-inline col-sm-2 col-md-2">
+                                <input type="radio" formControlName="hdrfontsize" value="40">40</label>
+                            <label class="radio-inline col-sm-2 col-md-2">
+                                <input type="radio" formControlName="hdrfontsize" value="50">50</label>                
+                        </div>
+                    </div>
+            
+                    <div class="col-sm-6 col-md-6" style="padding: 0px;">
+                        <label class="control-label col-sm-12 col-md-12 textsizecls">Message Text Size</label>
+                        <div class="col-sm-12 col-md-12" style="padding-left: 0px;">
+                            <label class="radio-inline col-sm-2 col-md-2">
+                                <input type="radio" formControlName="msgfontsize" value="10">10</label>
+                            <label class="radio-inline col-sm-2 col-md-2">
+                                <input type="radio" formControlName="msgfontsize" value="20">20</label>
+                            <label class="radio-inline col-sm-2 col-md-2">
+                                <input type="radio" formControlName="msgfontsize" value="30">30</label>                
+                        </div>                    
+                    </div>
+                </div>
+                
+                <div class="form-group">        
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid">Create File</button>
+                    </div>
+                </div>
+            </form>
         </div>
-
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="message">Meaasge</label>
-            <div class="col-sm-10">
-                <textarea class="form-control" rows="5" id="message" formControlName="message"></textarea>
-            </div>
+    </div>
+    <div *ngIf="!tableisready">
+        <div class="lds-ripple" style="margin-left: 46%; margin-top: 2%;"><div></div><div></div></div>
+    </div >
+    <div class="msgcls" *ngIf="fileDownloadStatus">
+        <p> Downloaded file is - {{dowloadedFile.fileName}} </p>
+    </div>
+    <div class="tablecontrolcls" *ngIf="tableisready">          
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>File Name</th>
+                    <th>Upload Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let filedetail of uploadedFileList; let srno = index">
+                    <td>{{srno + 1}}</td>
+                    <td><a href="#" (click)="downloadfile(filedetail.fileName)">{{filedetail.fileName}}</a></td>
+                    <td>{{filedetail.uploadDate}}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-
-        <div class="form-group">
-            <label class="control-label col-sm-5" for="fontname">Font Name</label>
-            <div class="col-sm-3">
-                <select class="form-control" id="fontname" formControlName="fontname">
-                    <option value="Arial">Arial</option>
-                    <option value="Courier">Courier</option>
-                    <option value="Verdana">Verdana</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-sm-5" for="hdrfonttype">Header Font</label>
-            <div class="col-sm-3">
-                <select class="form-control" id="hdrfonttype" formControlName="hdrfonttype">
-                    <option value="0">FONT.PLAIN</option>
-                    <option value="1">FONT.BOLD</option>
-                    <option value="2">FONT.ITALIC</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-sm-5" for="msgfonttype">Message Font</label>
-            <div class="col-sm-3">
-                <select class="form-control" id="msgfonttype" formControlName="msgfonttype">
-                    <option value="0">FONT.PLAIN</option>
-                    <option value="1">FONT.BOLD</option>
-                    <option value="2">FONT.ITALIC</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <p class="col-sm-12"> Font size for Header Text</p>
-            <div class="col-sm-12">
-                <label class="radio-inline col-sm-2">
-                    <input type="radio" formControlName="hdrfontsize" value="30" checked>30</label>
-                <label class="radio-inline col-sm-2">
-                    <input type="radio" formControlName="hdrfontsize" value="40">40</label>
-                <label class="radio-inline col-sm-2">
-                    <input type="radio" formControlName="hdrfontsize" value="50">50</label>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <p class="col-sm-12"> Font size for Message Text</p>
-            <div class="col-sm-12">
-                <label class="radio-inline col-sm-2">
-                    <input type="radio" formControlName="msgfontsize" value="10" checked>10</label>
-                <label class="radio-inline col-sm-2">
-                    <input type="radio" formControlName="msgfontsize" value="20">20</label>
-                <label class="radio-inline col-sm-2">
-                    <input type="radio" formControlName="msgfontsize" value="30">30</label>
-            </div>
-        </div>
-        <div class="form-group">        
-            <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid">Submit</button>
-            </div>
-        </div>
-    </form>
 </div>
